@@ -19,21 +19,21 @@ def contact():
 
 @app.route('/appointment')
 def appointment():
-    if 'logged_in' in session:
+    if 'user' in session:
         return render_template('appointment_booking.html')
     else:
         return redirect(url_for('login'))
 
 @app.route('/medical')
 def medical():
-    if 'logged_in' in session:
+    if 'user' in session:
         return render_template('medical_records.html')
     else:
         return redirect(url_for('login'))
 
 @app.route('/profile')
 def profile():
-    if 'logged_in' in session:
+    if 'user' in session:
         return render_template('profile.html')
     else:
         return redirect(url_for('login'))
@@ -72,7 +72,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('logged_in', None)
+    session.pop('user', None)
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
