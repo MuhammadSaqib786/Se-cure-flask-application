@@ -39,7 +39,6 @@ def profile():
         return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
-@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         email = request.form.get('email')
@@ -48,6 +47,7 @@ def register():
         address = request.form.get('address')
         phone = request.form.get('phone')
         password = request.form.get('pwd')
+        print(name,email,gender,address,phone,password)
         conn = create_connection()
         register_user(conn, (email, name, gender, address, phone, password))
         return redirect(url_for('login'))
@@ -60,13 +60,13 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('pwd')
-        conn = create_connection("securedb.db")
+        conn = create_connection()
         user = login_user(conn, email, password)
         if user:
             session['user'] = email
             return redirect(url_for('home'))
         else:
-            return "Invalid username or password"
+            return render_template('login.html', message="* Invalid email or password")
 
     return render_template('login.html')
 
@@ -76,5 +76,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    main()
+    #main()  #uncomment only first time
     app.run(debug=True)

@@ -19,11 +19,19 @@ def create_table(conn, create_table_sql):
         print(e)
 
 def register_user(conn, patient):
-    sql = ''' INSERT INTO Patients(patient_email, name, gender, address, phone, password) 
-              VALUES(?,?,?,?,?,?) '''
-    cur = conn.cursor()
-    cur.execute(sql, patient)
-    return cur.lastrowid
+    try:
+        print(patient)
+        sql = ''' INSERT INTO Patients(patient_email, name, gender, address, phone, password) 
+                VALUES(?,?,?,?,?,?) '''
+        cur = conn.cursor()
+        cur.execute(sql, patient)
+        conn.commit()
+        conn.close()
+        return cur.lastrowid
+    except Exception as e:
+        print(e)
+        return None
+    
 
 def login_user(conn, patient_email, password):
     cur = conn.cursor()
@@ -43,10 +51,11 @@ def add_doctor(conn, doctor):
               VALUES(?,?,?,?) '''
     cur = conn.cursor()
     cur.execute(sql, doctor)
+    
     return cur.lastrowid
 
 def main():
-    database = r"securedb.db"
+    
 
     sql_create_patients_table = """ CREATE TABLE IF NOT EXISTS Patients (
                                         patient_email text PRIMARY KEY,
@@ -96,6 +105,16 @@ def main():
         add_doctor(conn, doctor4)
         add_doctor(conn, doctor5)
 
+def get_patient():
+    conn = create_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM Patients LIMIT 1")
+    data = cur.fetchone()
+    conn.close()
+    return list(data) if data else None
+
 
 if __name__ == '__main__':
-    main()
+    #main()
+    pass
+
