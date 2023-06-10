@@ -1,5 +1,7 @@
 from flask import Flask, render_template, session, redirect, url_for, request
 
+from database.db_handler import register_user, login_user, create_connection, main
+
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # replace with your actual secret key
 
@@ -37,18 +39,35 @@ def profile():
         return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        # your registration logic here
-        pass
+        email = request.form.get('email')
+        name = request.form.get('name')
+        gender = request.form.get('gender')
+        address = request.form.get('address')
+        phone = request.form.get('phone')
+        password = request.form.get('pwd')
+        conn = create_connection()
+        register_user(conn, (email, name, gender, address, phone, password))
+        return redirect(url_for('login'))
+
     return render_template('register.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # your authentication logic here
-        session['logged_in'] = True
-        return redirect(url_for('profile'))
+        email = request.form.get('email')
+        password = request.form.get('pwd')
+        conn = create_connection("securedb.db")
+        user = login_user(conn, email, password)
+        if user:
+            session['user'] = email
+            return redirect(url_for('home'))
+        else:
+            return "Invalid username or password"
+
     return render_template('login.html')
 
 @app.route('/logout')
@@ -57,4 +76,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
+    main()
     app.run(debug=True)

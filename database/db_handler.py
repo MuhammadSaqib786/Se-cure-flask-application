@@ -18,14 +18,14 @@ def create_table(conn, create_table_sql):
     except Error as e:
         print(e)
 
-def register(conn, patient):
+def register_user(conn, patient):
     sql = ''' INSERT INTO Patients(patient_email, name, gender, address, phone, password) 
               VALUES(?,?,?,?,?,?) '''
     cur = conn.cursor()
     cur.execute(sql, patient)
     return cur.lastrowid
 
-def login(conn, patient_email, password):
+def login_user(conn, patient_email, password):
     cur = conn.cursor()
     cur.execute("SELECT * FROM Patients WHERE patient_email=? AND password=?", (patient_email, password,))
     rows = cur.fetchall()
@@ -74,7 +74,7 @@ def main():
                                             FOREIGN KEY (patient_id) REFERENCES Patients (patient_email)
                                         ); """
 
-    conn = create_connection(database)
+    conn = create_connection()
 
     if conn is not None:
         create_table(conn, sql_create_patients_table)
@@ -95,7 +95,7 @@ def main():
         add_doctor(conn, doctor3)
         add_doctor(conn, doctor4)
         add_doctor(conn, doctor5)
-        
+
 
 if __name__ == '__main__':
     main()
