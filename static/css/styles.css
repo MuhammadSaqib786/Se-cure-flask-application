@@ -1,0 +1,12 @@
+.navbar-brand{
+    color: white;
+    margin-right: 50px;
+}
+
+.nav-link, .nav-link:visited {
+    color: white;
+}
+
+.nav-link:hover{
+    color: yellow;
+}
