@@ -16,7 +16,30 @@
 <body>
   {% include 'navbar.html' %}
 
-  
+  <div class="container" style="margin-top: 100px;">
+    <h2>Following are appointments</h2>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Doctor Name/th>
+          <th scope="col">Appointment Time</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for appointment in appointments %}
+        <tr>
+          <th scope="row">{{ appointment[0] }}</th>
+          <td>{{ appointment[2] }}</td>
+          <td>{{ appointment[1] }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    
+
+  </div>
 
   <!-- Add Bootstrap JavaScript here -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

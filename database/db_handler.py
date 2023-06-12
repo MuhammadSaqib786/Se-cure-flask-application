@@ -141,9 +141,15 @@ def get_patient():
     conn.close()
     return list(data) if data else None
 
+def get_appointments_for_user(conn, patient_id):
+    cur = conn.cursor()
+    cur.execute("SELECT a.appointment_id, a.date_time, d.doctorname FROM Appointment a JOIN Doctors d ON a.doctor_id = d.doctor_id WHERE a.patient_id=?", (patient_id,))
+    return cur.fetchall()
+
+
 
 if __name__ == '__main__':
     #main()  #to create tables and add doctors
-    
+    #print(get_appointments_for_user(create_connection(),"saqisaqi.sk@gmail.com"))
     pass
 
