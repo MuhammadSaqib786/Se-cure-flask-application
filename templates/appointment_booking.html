@@ -16,7 +16,29 @@
 <body>
   {% include 'navbar.html' %}
 
-  
+  <div class="container">
+    <h2>Book Appointment</h2>
+    {% if message %}
+<div class="alert alert-danger">
+  {{ message }}
+</div>
+{% endif %}
+    <form action="{{ url_for('appointment') }}" method="post">
+      <div class="form-group">
+        <label for="doctor">Select Doctor:</label>
+        <select class="form-control" id="doctor" name="doctor">
+          {% for doctor in doctors %}
+            <option value="{{doctor[0]}}">{{doctor[1]}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="datetime">Date and Time:</label>
+        <input type="datetime-local" id="datetime" name="datetime">
+      </div>
+      <button type="submit" class="btn btn-primary">Book Appointment</button>
+    </form>
+  </div>
 
   <!-- Add Bootstrap JavaScript here -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

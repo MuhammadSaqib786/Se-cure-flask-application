@@ -1,6 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for, request
 
-from database.db_handler import register_user, login_user, create_connection, main
+from database.db_handler import register_user, login_user, create_connection, main,add_appointment, get_all_doctors
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # replace with your actual secret key
@@ -17,10 +17,26 @@ def about():
 def contact():
     return render_template('contact_us.html')
 
-@app.route('/appointment')
+@app.route('/appointment', methods=['GET', 'POST'])
 def appointment():
     if 'user' in session:
-        return render_template('appointment_booking.html')
+        conn = create_connection()
+        doctors = get_all_doctors()
+        message = ""
+        if request.method == 'POST':
+            doctor_id = request.form.get('doctor')
+            date_time = request.form.get('datetime')
+
+            if not doctor_id or not date_time:
+                message = "Please fill in all fields."
+            else:
+                added = add_appointment(conn, (doctor_id, session['user'], date_time))
+                if added:
+                    return redirect(url_for('home'))
+                else:
+                    message = "Failed to book appointment. Please try again."
+
+        return render_template('appointment_booking.html', doctors=doctors, message=message)
     else:
         return redirect(url_for('login'))
 

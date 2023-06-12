@@ -54,6 +54,34 @@ def add_doctor(conn, doctor):
     
     return cur.lastrowid
 
+def deleteDoctors():
+    conn = create_connection()
+    sql = 'Delete From Doctors'
+    cur = conn.cursor()
+    cur.execute(sql)
+    conn.commit()
+    
+
+def get_all_doctors():
+    conn= create_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM Doctors")
+    rows = cur.fetchall()
+    return rows
+
+def add_appointment(conn, appointment):
+    sql = ''' INSERT INTO Appointment(doctor_id, patient_id, date_time) VALUES(?,?,?) '''
+    cur = conn.cursor()
+    try:
+        cur.execute(sql, appointment)
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return False
+
+
+
 def main():
     
 
@@ -115,6 +143,7 @@ def get_patient():
 
 
 if __name__ == '__main__':
-    #main()
+    #main()  #to create tables and add doctors
+    
     pass
 
