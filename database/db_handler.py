@@ -141,6 +141,12 @@ def get_patient():
     conn.close()
     return list(data) if data else None
 
+def get_patient_details(conn, patient_email):
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM Patients WHERE patient_email=?", (patient_email,))
+    return cur.fetchone()
+
+
 def get_appointments_for_user(conn, patient_id):
     cur = conn.cursor()
     cur.execute("SELECT a.appointment_id, a.date_time, d.doctorname FROM Appointment a JOIN Doctors d ON a.doctor_id = d.doctor_id WHERE a.patient_id=?", (patient_id,))

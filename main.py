@@ -1,6 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for, request
 
-from database.db_handler import get_appointments_for_user, register_user, login_user, create_connection, main,add_appointment, get_all_doctors
+from database.db_handler import get_appointments_for_user, get_patient_details, register_user, login_user, create_connection, main,add_appointment, get_all_doctors
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # replace with your actual secret key
@@ -51,12 +51,15 @@ def medical():
         return redirect(url_for('login'))
 
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET'])
 def profile():
     if 'user' in session:
-        return render_template('profile.html')
+        conn = create_connection()
+        user_details = get_patient_details(conn, session['user'])
+        return render_template('profile.html', user=user_details)
     else:
         return redirect(url_for('login'))
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

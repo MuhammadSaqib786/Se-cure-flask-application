@@ -16,6 +16,20 @@
 <body>
   {% include 'navbar.html' %}
 
+  <div class="container d-flex justify-content-center">
+    <div class="card mt-5" style="width: 50%;">
+      <div class="card-header bg-primary text-white">
+        <h3 class="card-title"><i class="fas fa-user"></i> {{ user[1] }}</h3>
+      </div>
+      <div class="card-body">
+        <p class="card-text"><i class="fas fa-envelope"></i> Email: {{ user[0] }}</p>
+        <p class="card-text"><i class="fas fa-venus-mars"></i> Gender: {{ user[2] }}</p>
+        <p class="card-text"><i class="fas fa-home"></i> Address: {{ user[3] }}</p>
+        <p class="card-text"><i class="fas fa-phone"></i> Phone: {{ user[4] }}</p>
+      </div>
+    </div>
+  </div>
+  
   
 
   <!-- Add Bootstrap JavaScript here -->
