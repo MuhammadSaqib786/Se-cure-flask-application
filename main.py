@@ -72,8 +72,11 @@ def register():
         password = request.form.get('pwd')
         print(name,email,gender,address,phone,password)
         conn = create_connection()
-        register_user(conn, (email, name, gender, address, phone, password))
-        return redirect(url_for('login'))
+        if register_user(conn, (email, name, gender, address, phone, password)) != None:
+            
+            return redirect(url_for('login'))
+        else:
+            return render_template('register.html', message="User already exits!!")
 
     return render_template('register.html')
 

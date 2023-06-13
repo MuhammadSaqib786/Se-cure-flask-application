@@ -56,6 +56,12 @@
         <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pwd" required>
       </div>
       <button type="submit" class="btn btn-primary">Register</button>
+      {% if message %}
+      <div class="form-group">
+        <label>{{ message }}</label>
+        
+      </div>
+      {% endif %}
     </form>
   </div>
 
