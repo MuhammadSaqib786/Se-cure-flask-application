@@ -2,8 +2,22 @@ from flask import Flask, render_template, session, redirect, url_for, request
 
 from database.db_handler import get_appointments_for_user, get_patient_details, register_user, login_user, create_connection, main,add_appointment, get_all_doctors
 
+from flask_mail import Mail, Message
+import random
+import string
+
+
+
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # replace with your actual secret key
+#mail server config
+
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'emailsender039@gmail.com'  # your email
+app.config['MAIL_PASSWORD'] = 'bfkmsxirmpmonzim'  # your email password
+mail = Mail(app)
 
 @app.route('/')
 def home():
@@ -89,12 +103,35 @@ def login():
         conn = create_connection()
         user = login_user(conn, email, password)
         if user:
-            session['user'] = email
-            return redirect(url_for('home'))
+            # generate a random string
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            session['code'] = code
+            session['user-temp'] = email
+
+            # send the code to the user's email
+            msg = Message('Your verification code', sender='emailsender039@gmail.com', recipients=[email])
+            msg.body = f'Your verification code is {code}'
+            mail.send(msg)
+
+            return render_template('verify.html')
         else:
             return render_template('login.html', message="* Invalid email or password")
 
     return render_template('login.html')
+
+@app.route('/verify', methods=['GET', 'POST'])
+def verify():
+    if request.method == 'POST':
+        user_code = request.form.get('code')
+        print("User entered ",user_code)
+        print("Code in session ",session['code'])
+        if 'code' in session and user_code == session['code']:
+            session['user'] = session['user-temp'] 
+            return redirect(url_for('home'))
+        else:
+            return render_template('verify.html', message='* Invalid code')
+    return render_template('verify.html')
+
 
 @app.route('/logout')
 def logout():
